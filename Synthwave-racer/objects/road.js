@@ -4,7 +4,8 @@ import { ROAD_LENGTH, ROAD_SPEED } from '../utils/constants.js';
 let roadMesh;
 
 export function createRoad(scene) {
-    const geometry = new THREE.PlaneGeometry(20, ROAD_LENGTH, 20, 200);
+    const visualLength = ROAD_LENGTH * 3;
+    const geometry = new THREE.PlaneGeometry(20, visualLength, 20, 600);
 
     const material = new THREE.MeshStandardMaterial({
         color: 0x111111,
@@ -15,14 +16,13 @@ export function createRoad(scene) {
 
     roadMesh = new THREE.Mesh(geometry, material);
     roadMesh.rotation.x = -Math.PI / 2;
-    roadMesh.position.z = -ROAD_LENGTH / 2;
+    roadMesh.position.z = -ROAD_LENGTH;
 
     scene.add(roadMesh);
 }
 
 export function updateRoad(time) {
     if (!roadMesh) return;
-
-    const z = (time * ROAD_SPEED) % ROAD_LENGTH;
-    roadMesh.position.z = z - ROAD_LENGTH / 2;
+    const offset = (time * ROAD_SPEED) % ROAD_LENGTH;
+    roadMesh.position.z = -ROAD_LENGTH + offset;
 }
