@@ -78,7 +78,7 @@ function updatePulses(time) {
       
       
       const startSize = 18;
-      const endSize = 120; // Larger end size
+      const endSize = 120; 
       const currentSize = startSize + (endSize - startSize) * progress;
       pulse.scale.set(currentSize, currentSize, currentSize);
       
@@ -93,4 +93,5 @@ function updatePulses(time) {
       window.pulses.splice(i, 1);
     }
   }
+
 }
