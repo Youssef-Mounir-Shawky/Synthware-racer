@@ -16,7 +16,8 @@ import { createWater, updateWater } from './objects/water.js';
 import { setupLights } from './effects/lights.js';
 import { setupFog } from './effects/fog.js';
 import { updateCamera } from './animation/cameraFollow.js';
-import { setupCarAudio, startEngine } from './audio/carAudio.js';
+import { setupCarAudio, startEngine, updateEnginePitch } from './audio/carAudio.js';
+import { ROAD_SPEED } from './utils/constants.js';
 
 
 // Initialize core systems
@@ -58,6 +59,10 @@ function animate() {
     updateRoad(time);
     updateCar(time, delta);
     updateMountains(time);
+
+    // Dynamic engine pitch (use a base speed + vertical sway or fake speed)
+    updateEnginePitch(ROAD_SPEED);
+
     updateSun(time);
     updateSkybox(time);
     updateFlock(delta, time);
@@ -87,16 +92,17 @@ window.addEventListener('resize', () => {
     composer.setSize(window.innerWidth, window.innerHeight);
 });
 
-window.addEventListener('click', async () => {
-    if (listener && listener.context) {
+async function initAudio() {
+    if (listener && listener.context && !audioContextStarted) {
         const ctx = listener.context;
         if (ctx.state === 'suspended') {
             await ctx.resume().catch(e => console.error("Failed to resume AudioContext:", e));
             console.log("AudioContext resumed.");
         }
+        startEngine();
+        audioContextStarted = true;
     }
+}
 
-    // Always call start functions; they handle loading checks internally
-    startEngine();
-    audioContextStarted = true;
-});
+window.addEventListener('click', initAudio);
+window.addEventListener('keydown', initAudio);
