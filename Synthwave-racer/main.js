@@ -3,6 +3,7 @@
 import { createScene } from './core/scene.js';
 import { createCamera } from './core/camera.js';
 import { createRenderer } from './core/renderer.js';
+import { createComposer } from './core/composer.js';
 import { getTime, getDelta } from './core/clock.js';
 
 // Object imports
@@ -24,6 +25,7 @@ import { getCarPosition } from './objects/car.js';
 const scene = createScene();
 const camera = createCamera();
 const renderer = createRenderer();
+const composer = createComposer(renderer, scene, camera);
 
 // Set up scene content
 createRoad(scene);
@@ -56,7 +58,7 @@ function animate() {
     updateCamera(camera, carPos, time);
 
     // Render frame
-    renderer.render(scene, camera);
+    composer.render();
 }
 
 // Start animation
@@ -67,4 +69,5 @@ window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    composer.setSize(window.innerWidth, window.innerHeight);
 });
