@@ -12,7 +12,7 @@ export function setupMusic(listener) {
     audioLoader.load(audioPath, (buffer) => {
         music.setBuffer(buffer);
         music.setLoop(true);
-        music.setVolume(0.2);
+        music.setVolume(0);
         isLoaded = true;
         console.log("Background music loaded");
     }, undefined, (err) => {
