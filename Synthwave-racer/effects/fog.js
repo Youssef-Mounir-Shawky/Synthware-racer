@@ -5,7 +5,7 @@ export function setupFog(scene) {
 
   scene.fog = new THREE.FogExp2(
     fogColor,
-    0.008
+    0.0005
   );
 
   scene.background = fogColor;
