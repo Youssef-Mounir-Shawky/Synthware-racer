@@ -30,8 +30,8 @@ export function createWater(scene) {
     textureHeight: 1024,
     waterNormals: waterNormals,
     sunDirection: new THREE.Vector3(0, 1, 0), // Sun directly above
-    sunColor: 0xff00ff, // Bright magenta matching your sun
-    waterColor: 0x2d1b4e, // Deep purple matching the scene
+    sunColor: 0xff00ff, // Magenta sun for synthwave
+    waterColor: 0x001e3f, // Deep blue-purple
     distortionScale: 2.5, // Subtle ripples
     fog: scene.fog !== undefined,
     side: THREE.DoubleSide,
@@ -49,8 +49,8 @@ export function createWater(scene) {
     textureHeight: 1024,
     waterNormals: waterNormals,
     sunDirection: new THREE.Vector3(0, 1, 0),
-    sunColor: 0xff00ff, // Bright magenta
-    waterColor: 0x2d1b4e, // Deep purple
+    sunColor: 0xff00ff, // Magenta sun for synthwave
+    waterColor: 0x001e3f, // Deep blue-purple
     distortionScale: 2.5,
     fog: scene.fog !== undefined,
     side: THREE.DoubleSide,
