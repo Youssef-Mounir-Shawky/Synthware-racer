@@ -1,11 +1,13 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { setupStorkAudio, isLoaded } from '../audio/storkAudio.js';
 
 export class Stork {
     constructor(scene, config = {}) {
         this.scene = scene;
         this.mesh = null;
         this.mixer = null;
+        this.listener = config.listener || null;
 
         // Randomization for realism
         this.speed = config.speed || 0.8 + Math.random() * 0.4;
@@ -28,6 +30,11 @@ export class Stork {
             this.mesh.scale.set(0.04, 0.04, 0.04);
             this.scene.add(this.mesh);
 
+            // Setup Audio if listener is available
+            if (this.listener) {
+                this.sound = setupStorkAudio(this.listener, this.mesh);
+            }
+
             this.mixer = new THREE.AnimationMixer(this.mesh);
             if (gltf.animations.length > 0) {
                 const action = this.mixer.clipAction(gltf.animations[0]);
@@ -41,6 +48,22 @@ export class Stork {
     update(delta, time, flockCenter, flockDirection) {
         if (this.mixer) this.mixer.update(delta);
         if (!this.mesh) return;
+
+        // Proximity-Based Audio Logic
+        if (this.sound && isLoaded) {
+            // Birds are "close" when near the player (car is at Z=0)
+            const distToPlayer = Math.abs(this.mesh.position.z);
+
+            if (distToPlayer < 60) {
+                if (!this.sound.isPlaying) {
+                    this.sound.play();
+                }
+            } else {
+                if (this.sound.isPlaying) {
+                    this.sound.stop();
+                }
+            }
+        }
 
         // 1. Calculate Target Position
         const targetPos = new THREE.Vector3().copy(flockCenter).add(this.relativePos);

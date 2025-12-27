@@ -10,10 +10,10 @@ const RESPOND_Z = 100;    // Reset when this far behind the car
 const START_Z = -300;     // Respawn at this distance ahead
 const RELATIVE_SPEED = 0.3; // Speed at which the flock moves back relative to car
 
-export function createFlock(scene, count = 15) {
+export function createFlock(scene, count = 15, listener = null) {
     storks = [];
     for (let i = 0; i < count; i++) {
-        storks.push(new Stork(scene));
+        storks.push(new Stork(scene, { listener }));
     }
 }
 

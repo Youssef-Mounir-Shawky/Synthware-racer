@@ -32,13 +32,16 @@ createMountains(scene);
 createWater(scene);
 createSun(scene);
 createSkybox(scene);
-createFlock(scene, 20); // Add a flock of 20 storks
+// Note: flock creation moved after audio setup to get the listener.
 setupLights(scene);
 setupFog(scene);
 
 // Audio Setup (Requires camera and car object)
 // Note: createCar adds a placeholder carMesh immediately, named 'carObject'.
 const { engineSound, listener } = setupCarAudio(camera, scene.getObjectByName('carObject') || scene);
+
+// Initialize Flock with listener for positional birds sound
+createFlock(scene, 20, listener);
 
 let audioContextStarted = false;
 
@@ -85,22 +88,15 @@ window.addEventListener('resize', () => {
 });
 
 window.addEventListener('click', async () => {
-    if (!audioContextStarted) {
-        if (listener && listener.context) {
-            const ctx = listener.context;
-            if (ctx.state === 'suspended') {
-                try {
-                    await ctx.resume();
-                    audioContextStarted = true;
-                    console.log("AudioContext resumed, starting engine...");
-                    startEngine();
-                } catch (error) {
-                    console.error("Failed to resume AudioContext:", error);
-                }
-            } else {
-                audioContextStarted = true;
-                startEngine();
-            }
+    if (listener && listener.context) {
+        const ctx = listener.context;
+        if (ctx.state === 'suspended') {
+            await ctx.resume().catch(e => console.error("Failed to resume AudioContext:", e));
+            console.log("AudioContext resumed.");
         }
     }
+
+    // Always call start functions; they handle loading checks internally
+    startEngine();
+    audioContextStarted = true;
 });
