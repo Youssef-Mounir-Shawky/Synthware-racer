@@ -1,5 +1,12 @@
-// Placeholder — required to avoid 404
+import * as THREE from 'three';
+
 export function setupFog(scene) {
-    // Optional: add fog later
-    // scene.fog = new THREE.Fog(0x0c0c2c, 50, 200);
+  const fogColor = new THREE.Color(0xf2d9ff); 
+
+  scene.fog = new THREE.FogExp2(
+    fogColor,
+    0.008
+  );
+
+  scene.background = fogColor;
 }
