@@ -1,5 +1,5 @@
 /**
- * Car object with keyboard controls
+ * Car object with keyboard controls and shadows
  * 
  * Fixes applied:
  * - Changed Three.js import to `from 'three'` to match import map in index.html
@@ -8,6 +8,7 @@
  * - Wheels rotate using global `time` (not deltaTime) for smooth, deterministic animation
  * - Model path is now relative: `./models/car.glb` (no leading slash)
  * - Added keyboard controls for left/right movement (A/D keys)
+ * - Added shadow casting and receiving
  * 
  * Note: GLTFLoader still uses CDN URL – that's OK because it's not part of core Three.js.
  * 
@@ -65,11 +66,16 @@ export function createCar(scene) {
         // Add loaded model as child
         carMesh.add(loadedCar);
 
-        // Find wheel meshes for animation
-        wheels = [];
+        // Enable shadows for all meshes in the car
         loadedCar.traverse(child => {
-            if (child.isMesh && child.name.toLowerCase().includes('wheel')) {
-                wheels.push(child);
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                
+                // Find wheel meshes for animation
+                if (child.name.toLowerCase().includes('wheel')) {
+                    wheels.push(child);
+                }
             }
         });
     }, undefined, (error) => {
