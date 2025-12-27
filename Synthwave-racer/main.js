@@ -10,6 +10,7 @@ import { createRoad, updateRoad } from './objects/road.js';
 import { createCar, updateCar } from './objects/car.js';
 import { createMountains, updateMountains } from './objects/mountains.js';
 import { createSun, updateSun } from './objects/sun.js';
+import { createSkybox, updateSkybox } from './objects/sky.js';
 
 // Effect & animation imports
 import { setupLights } from './effects/lights.js';
@@ -27,6 +28,7 @@ createRoad(scene);
 createCar(scene);
 createMountains(scene);
 createSun(scene);
+createSkybox(scene);
 setupLights(scene);
 setupFog(scene);
 
@@ -41,6 +43,7 @@ function animate() {
     updateCar(time);
     updateMountains(time);
     updateSun(time);
+    updateSkybox(time);
 
     // Update camera based on car position
     const carPos = getCarPosition();

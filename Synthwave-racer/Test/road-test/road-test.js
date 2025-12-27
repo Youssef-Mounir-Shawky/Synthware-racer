@@ -4,18 +4,19 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
 import { createRoad, updateRoad } from '../../objects/road.js';
+import { createSkybox, updateSkybox } from '../../objects/sky.js';
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x120016);
 
 // Camera
 const camera = new THREE.PerspectiveCamera(
-    60,
+    75,
     window.innerWidth / window.innerHeight,
     0.1,
-    500
+    5000
 );
-camera.position.set(0, 5, 10);
+camera.position.set(0, 4, 10);
 camera.lookAt(0, 0, -30);
 
 // Renderer
@@ -43,6 +44,9 @@ composer.addPass(bloomPass);
 // Road
 createRoad(scene);
 
+// Skybox
+createSkybox(scene);
+
 // Resize
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -58,6 +62,7 @@ function animate() {
     requestAnimationFrame(animate);
 
     updateRoad(clock.getElapsedTime());
+    updateSkybox(clock.getElapsedTime());
     composer.render();
 }
 
