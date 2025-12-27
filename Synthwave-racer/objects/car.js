@@ -92,6 +92,10 @@ export function updateCar(time, delta) {
     if (keys.d) {
         targetX += moveSpeed * delta * 10;
     }
+    // Test keyboard
+    window.addEventListener('keydown', (e) => {
+        console.log('Key pressed:', e.key);
+    });
 
     // Clamp target position
     targetX = Math.max(minX, Math.min(maxX, targetX));
