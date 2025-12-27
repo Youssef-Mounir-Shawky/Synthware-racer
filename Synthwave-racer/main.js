@@ -26,6 +26,9 @@ const camera = createCamera();
 const renderer = createRenderer();
 const composer = createComposer(renderer, scene, camera);
 
+// Setup fog before objects so Water can detect it
+setupFog(scene);
+
 // Set up scene content
 createRoad(scene);
 createCar(scene);
@@ -33,9 +36,7 @@ createMountains(scene);
 createWater(scene);
 createSun(scene);
 createSkybox(scene);
-// Note: flock creation moved after audio setup to get the listener.
 setupLights(scene);
-setupFog(scene);
 
 // Audio Setup (Requires camera and car object)
 // Note: createCar adds a placeholder carMesh immediately, named 'carObject'.
