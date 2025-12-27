@@ -15,7 +15,7 @@
  */
 
 import * as THREE from 'three';
-import { GLTFLoader } from 'https://unpkg.com/three@0.160.1/examples/jsm/loaders/GLTFLoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // Placeholder always exists at origin (0,0,0)
 let carMesh = new THREE.Object3D();
