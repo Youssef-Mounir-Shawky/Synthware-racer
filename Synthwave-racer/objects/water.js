@@ -7,9 +7,9 @@ let waterRight;
 
 export function createWater(scene) {
   // Water extends far on both sides
-  const waterWidth = 150;
+  const waterWidth = 200;
   const waterLength = 1000;
-  const waterOffset = ROAD_WIDTH / 2 + 1; // Close to road edge
+  const waterOffset = (ROAD_WIDTH / 2 + 1 )-4; // Close to road edge
 
   // Create water geometry
   const waterGeometry = new THREE.PlaneGeometry(waterWidth, waterLength, 1, 1);
