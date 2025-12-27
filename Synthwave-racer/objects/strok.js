@@ -1,41 +1,55 @@
 import * as THREE from 'three';
-import { GLTFLoader } from 'https://unpkg.com/three@0.160.1/examples/jsm/loaders/GLTFLoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let mixer;
-let storkMesh;
+export class Stork {
+    constructor(scene, config = {}) {
+        this.scene = scene;
+        this.mesh = null;
+        this.mixer = null;
 
-export function createStork(scene) {
-    // Use absolute path or module-relative to ensure it loads
-    const loader = new GLTFLoader();
-    const modelPath = new URL('../models/Stork.glb', import.meta.url).href;
+        // Configuration
+        this.speed = config.speed || 0.5 + Math.random() * 0.5;
+        this.radius = config.radius || 10 + Math.random() * 20;
+        this.offset = config.offset || Math.random() * Math.PI * 2;
+        this.bobSpeed = config.bobSpeed || 1 + Math.random();
+        this.center = config.center || { x: 0, z: -10 };
+        this.baseY = config.y || 5 + Math.random() * 10;
 
-    loader.load(modelPath, (gltf) => {
-        storkMesh = gltf.scene;
-        // Scale and Position it
-        storkMesh.scale.set(0.05, 0.05, 0.05); // Adjust scale as needed
-        storkMesh.position.set(5, 5, -10); // To the right and ahead
-        storkMesh.rotation.y = Math.PI; // Face the camera? Or away? Let's check.
-        // Usually models face +Z or -Z. 
+        const loader = new GLTFLoader();
+        const modelPath = new URL('../models/Stork.glb', import.meta.url).href;
 
-        scene.add(storkMesh);
+        loader.load(modelPath, (gltf) => {
+            this.mesh = gltf.scene;
+            this.mesh.scale.set(0.05, 0.05, 0.05);
+            this.mesh.position.set(this.center.x, this.baseY, this.center.z);
+            this.scene.add(this.mesh);
 
-        // Animation Mixer
-        mixer = new THREE.AnimationMixer(storkMesh);
-        if (gltf.animations && gltf.animations.length > 0) {
-            const action = mixer.clipAction(gltf.animations[0]);
-            action.play();
-        }
-    });
-}
-
-export function updateStork(delta, time) {
-    if (mixer) {
-        mixer.update(delta);
+            this.mixer = new THREE.AnimationMixer(this.mesh);
+            if (gltf.animations.length > 0) {
+                const action = this.mixer.clipAction(gltf.animations[0]);
+                action.startAt(Math.random());
+                action.play();
+                action.timeScale = 0.8 + Math.random() * 0.4;
+            }
+        });
     }
-    if (storkMesh) {
-        // Optional: Make it fly alongside the car or in a circle
-        // Simple circle movement
-        storkMesh.position.z = -10 + Math.sin(time) * 5;
-        storkMesh.position.y = 5 + Math.cos(time) * 1;
+
+    update(delta, time) {
+        if (this.mixer) {
+            this.mixer.update(delta);
+        }
+
+        if (this.mesh) {
+            // Circular flight around center
+            const angle = time * this.speed + this.offset;
+            this.mesh.position.x = this.center.x + Math.cos(angle) * this.radius;
+            this.mesh.position.z = this.center.z + Math.sin(angle) * this.radius;
+
+            // Bobbing
+            this.mesh.position.y = this.baseY + Math.sin(time * this.bobSpeed) * 1.5;
+
+            // Look in direction of travel
+            this.mesh.rotation.y = -angle + Math.PI / 2;
+        }
     }
 }

@@ -4,7 +4,7 @@ import { createScene } from './core/scene.js';
 import { createCamera } from './core/camera.js';
 import { createRenderer } from './core/renderer.js';
 import { createComposer } from './core/composer.js';
-import { getTime, getDelta } from './core/clock.js';
+import { getTime, updateClock, getDelta } from './core/clock.js';
 
 // Object imports
 import { createRoad, updateRoad } from './objects/road.js';
@@ -42,6 +42,7 @@ setupFog(scene);
 function animate() {
     requestAnimationFrame(animate);
 
+    const delta = updateClock();
     const time = getTime();
 
     // Update all objects
@@ -50,7 +51,7 @@ function animate() {
     updateMountains(time);
     updateSun(time);
     updateSkybox(time);
-    updateFlock(getDelta(), time);
+    updateFlock(delta, time);
     updateWater(time);
 
     // Update camera based on car position
