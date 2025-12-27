@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-const offset = new THREE.Vector3(0, 4, 10);
+const offset = new THREE.Vector3(0, 4, 15);
 const smoothness = 0.1;
 
 export function updateCamera(camera, carPosition, time) {
