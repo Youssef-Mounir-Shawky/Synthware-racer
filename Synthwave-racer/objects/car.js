@@ -19,6 +19,7 @@ import { GLTFLoader } from 'https://unpkg.com/three@0.160.1/examples/jsm/loaders
 
 // Placeholder always exists at origin (0,0,0)
 let carMesh = new THREE.Object3D();
+carMesh.name = 'carObject';
 let wheels = [];
 
 // Movement variables
@@ -71,7 +72,7 @@ export function createCar(scene) {
             if (child.isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
-                
+
                 // Find wheel meshes for animation
                 if (child.name.toLowerCase().includes('wheel')) {
                     wheels.push(child);
@@ -100,7 +101,7 @@ export function updateCar(time, delta) {
 
     // Rotate wheels based on global time for smooth sync
     wheels.forEach(wheel => {
-        wheel.rotation.x = time * 20 ; // Adjust speed factor as needed
+        wheel.rotation.x = time * 20; // Adjust speed factor as needed
     });
 }
 

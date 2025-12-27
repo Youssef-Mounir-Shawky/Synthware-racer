@@ -16,20 +16,16 @@ import { createWater, updateWater } from './objects/water.js';
 import { setupLights } from './effects/lights.js';
 import { setupFog } from './effects/fog.js';
 import { updateCamera } from './animation/cameraFollow.js';
+import { setupCarAudio, startEngine } from './audio/carAudio.js';
 
 
-// ======================
-// INITIALIZATION
-// ======================
+// Initialize core systems
 const scene = createScene();
 const camera = createCamera();
 const renderer = createRenderer();
 const composer = createComposer(renderer, scene, camera);
 
-
-// ======================
-// SCENE CONTENT
-// ======================
+// Set up scene content
 createRoad(scene);
 createCar(scene);
 createMountains(scene);
@@ -37,9 +33,14 @@ createWater(scene);
 createSun(scene);
 createSkybox(scene);
 createFlock(scene, 20); // Add a flock of 20 storks
-
 setupLights(scene);
 setupFog(scene);
+
+// Audio Setup (Requires camera and car object)
+// Note: createCar adds a placeholder carMesh immediately, named 'carObject'.
+const { engineSound, listener } = setupCarAudio(camera, scene.getObjectByName('carObject') || scene);
+
+let audioContextStarted = false;
 
 // ======================
 // ANIMATION LOOP
@@ -63,7 +64,7 @@ function animate() {
     const carPos = getCarPosition();
     updateCamera(camera, carPos, time);
 
-   
+
 
     // Render frame using composer (for post-processing effects)
     composer.render();
@@ -83,25 +84,22 @@ window.addEventListener('resize', () => {
     composer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// Handle audio context activation (requires user interaction)
-let audioContextStarted = false;
-
 window.addEventListener('click', async () => {
-    if (!audioContextStarted && carSound.listener) {
-        const ctx = carSound.listener.context;
-        if (ctx.state === 'suspended') {
-            try {
-                await ctx.resume();
-                audioContextStarted = true;
-                console.log("AudioContext resumed successfully");
-                
-                // Start playing the sound immediately after resume
-                if (carSound.engineSound && carSound.engineSound.buffer) {
-                    carSound.engineSound.play();
-                    carSound.isPlaying = true;
+    if (!audioContextStarted) {
+        if (listener && listener.context) {
+            const ctx = listener.context;
+            if (ctx.state === 'suspended') {
+                try {
+                    await ctx.resume();
+                    audioContextStarted = true;
+                    console.log("AudioContext resumed, starting engine...");
+                    startEngine();
+                } catch (error) {
+                    console.error("Failed to resume AudioContext:", error);
                 }
-            } catch (error) {
-                console.error("Failed to resume AudioContext:", error);
+            } else {
+                audioContextStarted = true;
+                startEngine();
             }
         }
     }
