@@ -1,21 +1,41 @@
+/**
+ * Basic lighting with shadow support
+ */
 import * as THREE from 'three';
 
 export function setupLights(scene) {
-  // Soft ambient light so everything stays visible
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-  scene.add(ambientLight);
+    // Soft ambient light
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+    scene.add(ambientLight);
 
-  // Directional light from the FRONT (matching sun direction)
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  directionalLight.position.set(0, 10, -20);
-  scene.add(directionalLight);
+    // Directional "sun" light with shadows
+    const sunLight = new THREE.DirectionalLight(0xffffff, 1.5);
+    sunLight.position.set(0, 25, -40);
+    
+    // Enable shadows
+    sunLight.castShadow = true;
+    
+    // Configure shadow quality
+    sunLight.shadow.mapSize.width = 2048;
+    sunLight.shadow.mapSize.height = 2048;
+    
+    // Configure shadow camera
+    sunLight.shadow.camera.near = 0.5;
+    sunLight.shadow.camera.far = 100;
+    
+    // Shadow camera frustum (adjust based on your scene size)
+    const shadowSize = 30;
+    sunLight.shadow.camera.left = -shadowSize;
+    sunLight.shadow.camera.right = shadowSize;
+    sunLight.shadow.camera.top = shadowSize;
+    sunLight.shadow.camera.bottom = -shadowSize;
+    
+    // Reduce shadow artifacts
+    sunLight.shadow.bias = -0.0005;
+    
+    scene.add(sunLight);
 
-  // Subtle neon accents 
-  const pinkLight = new THREE.PointLight(0xff66ff, 0.8, 30);
-  pinkLight.position.set(-6, 3, 5);
-  scene.add(pinkLight);
-
-  const cyanLight = new THREE.PointLight(0x66ffff, 0.8, 30);
-  cyanLight.position.set(6, 3, 5);
-  scene.add(cyanLight);
+    // Optional: Visualize shadow camera for debugging
+    // const helper = new THREE.CameraHelper(sunLight.shadow.camera);
+    // scene.add(helper);
 }

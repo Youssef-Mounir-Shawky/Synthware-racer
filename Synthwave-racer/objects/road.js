@@ -10,6 +10,7 @@
  * 
  */
 
+// objects/road.js
 import * as THREE from 'three';
 import { ROAD_LENGTH, ROAD_SPEED, ROAD_WIDTH } from '../utils/constants.js';
 
@@ -68,8 +69,19 @@ export function createRoad(scene) {
     roadMesh = new THREE.Mesh(geometry, material);
     roadMesh.rotation.x = -Math.PI / 2;
     roadMesh.position.z = -ROAD_LENGTH;
-    roadMesh.receiveShadow = true;
+    
     scene.add(roadMesh);
+
+    const groundGeometry = new THREE.PlaneGeometry(ROAD_WIDTH + 5, 2000);
+    const groundMaterial = new THREE.ShadowMaterial({ 
+        opacity: 0.5
+    });
+    
+    const groundPlane = new THREE.Mesh(groundGeometry, groundMaterial);
+    groundPlane.rotation.x = -Math.PI / 2;
+    groundPlane.receiveShadow = true;
+    
+    scene.add(groundPlane);
 }
 
 export function updateRoad(time) {
