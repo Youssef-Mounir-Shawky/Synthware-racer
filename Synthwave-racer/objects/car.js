@@ -1,4 +1,4 @@
-import * as THREE from 'https://unpkg.com/three@0.160.1/build/three.module.js';
+import * as THREE from 'three';
 import { GLTFLoader } from 'https://unpkg.com/three@0.160.1/examples/jsm/loaders/GLTFLoader.js';
 
 let carMesh;   
@@ -6,7 +6,7 @@ let wheels = [];
 
 export function createCar(scene) {
     const loader = new GLTFLoader();
-    loader.load('/Synthwave-racer/models/car.glb', (gltf) => {  
+    loader.load(new URL('../models/car.glb', import.meta.url).href, (gltf) => {
         const car = gltf.scene;
         scene.add(car);
 
