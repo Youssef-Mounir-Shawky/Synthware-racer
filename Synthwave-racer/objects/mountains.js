@@ -8,7 +8,7 @@ export function createMountains(scene) {
   const geometry = new THREE.ConeGeometry(6, 18, 6, 1);
 
   const solidMaterial = new THREE.MeshStandardMaterial({
-    color: 0x120022,
+    color: 0x120023,
     roughness: 0.8,
     metalness: 0.1,
     flatShading: true
